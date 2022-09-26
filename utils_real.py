@@ -11,6 +11,7 @@ except:
 from realworld_func.class_motionhelper import timer
 from realworld_func.class_xm430 import xm430
 from utils_track import tps_trans
+from xy_publisher import xy_publisher
 import matplotlib.patches as patches 
 import matplotlib.pyplot as plt
 import matplotlib
@@ -245,7 +246,7 @@ def run_snapbot_get_traj_real_score(qpos, tps_coef, snapbot, Hz, max_sec, VERBOS
 
     return real_xy_y_traj, real_score
 
-def run_snapbot_tps(qpos, tps_coef, snapbot, Hz, max_sec, VERBOSE=False):
+def run_snapbot_tps(qpos, tps_coef, snapbot, Hz, max_sec, VERBOSE=False, ROS_publish=True):
     traj = get_traj(qpos)
     real_xy_y_traj = np.empty(shape=(0,2))
 
@@ -309,6 +310,7 @@ def run_snapbot_tps(qpos, tps_coef, snapbot, Hz, max_sec, VERBOSE=False):
             tanx = abs(((ptC[0]+ptD[0])/2) - cX)
             rad = math.atan2(tanx,tany)
             deg = int(rad * 180 / math.pi)
+            if ROS_publish: xy_publisher(real_center_pos[0, 1], -real_center_pos[0, 0], Hz)
             
             if VERBOSE: 
                 cv2.putText(color_image, "({},{}),{}".format(cX, cY, deg), (ptA[0], ptA[1] - 15),
