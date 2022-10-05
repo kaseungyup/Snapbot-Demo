@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
 import rospy
-from std_msgs.msg import String
+from std_msgs.msg import String, Float64MultiArray
  
 def x_publisher(x_val, Hz):
     pub = rospy.Publisher('acc_x', String, queue_size=10)
     rospy.init_node('xy_publisher', anonymous=True)
     rate = rospy.Rate(Hz) # 50hz
 
-    acc_x = "%s" % (x_val)
+    acc_x = "%f" % (x_val)
     rospy.loginfo(acc_x)
     pub.publish(acc_x)
     rate.sleep()
@@ -19,18 +19,21 @@ if __name__ == '__main__':
     except rospy.ROSInterruptException:
         pass
 
-def xy_publisher(x_pos, y_pos, Hz):
-    pub = rospy.Publisher('pos', String, queue_size=10)
-    rospy.init_node('xy_publisher', anonymous=True)
-    rate = rospy.Rate(Hz) # 50hz
+def apriltag_publisher(x_pos, y_pos, Hz):
+    pub = rospy.Publisher('apriltag_position', Float64MultiArray, queue_size=10)
+    rospy.init_node('apriltag_publisher', anonymous=True)
+    rate = rospy.Rate(Hz)
 
-    pos = "%s %s" % (x_pos, y_pos)
-    rospy.loginfo(pos)
-    pub.publish(pos)
-    rate.sleep()
+    while not rospy.is_shutdown():
+        pos = Float64MultiArray()
+        array = [x_pos, y_pos]
+        pos.data = array
+        rospy.loginfo(pos.data)
+        pub.publish(pos)
+        rate.sleep()
 
 if __name__ == '__main__':
     try:
-        xy_publisher()
+        apriltag_publisher()
     except rospy.ROSInterruptException:
         pass

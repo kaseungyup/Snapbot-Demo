@@ -8,7 +8,7 @@ import pyrealsense2 as rs
 from realworld_func.class_motionhelper import timer
 from realworld_func.class_xm430 import xm430
 from utils_track import tps_trans
-from publisher import xy_publisher
+from publisher import apriltag_publisher
 #import matplotlib.patches as patches 
 #import matplotlib.pyplot as plt
 #import matplotlib
@@ -307,7 +307,7 @@ def run_snapbot_tps(qpos, tps_coef, snapbot, Hz, max_sec, VERBOSE=False, ROS_pub
             tanx = abs(((ptC[0]+ptD[0])/2) - cX)
             rad = math.atan2(tanx,tany)
             deg = int(rad * 180 / math.pi)
-            if ROS_publish: xy_publisher(real_center_pos[0, 1], -real_center_pos[0, 0], Hz)
+            if ROS_publish: apriltag_publisher(real_center_pos[0, 1], -real_center_pos[0, 0], Hz)
             
             if VERBOSE: 
                 cv2.putText(color_image, "({},{}),{}".format(cX, cY, deg), (ptA[0], ptA[1] - 15),
@@ -371,7 +371,7 @@ def publish_xy(tps_coef, Hz, max_sec, VERBOSE=False):
             tanx = abs(((ptC[0]+ptD[0])/2) - cX)
             rad = math.atan2(tanx,tany)
             deg = int(rad * 180 / math.pi)
-            xy_publisher(real_center_pos[0, 1], -real_center_pos[0, 0], Hz)
+            apriltag_publisher(real_center_pos[0, 1], -real_center_pos[0, 0], Hz)
             
             if VERBOSE: 
                 cv2.putText(color_image, "({},{}),{}".format(cX, cY, deg), (ptA[0], ptA[1] - 15),

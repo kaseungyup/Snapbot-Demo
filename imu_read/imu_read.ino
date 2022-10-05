@@ -23,7 +23,20 @@ void loop() {
 
   /* Display the results (acceleration is measured in m/s^2) */
 
-  Serial.println(accel.acceleration.x);
+  Serial.print(accel.acceleration.x);
+  Serial.print(" ");
+  Serial.print(accel.acceleration.y);
+  Serial.print(" ");
+  Serial.print(accel.acceleration.z);
+
+  Serial.print(" ");
+  Serial.print(gyro.gyro.x);
+  Serial.print(" ");
+  Serial.print(gyro.gyro.y);
+  Serial.print(" ");
+  Serial.print(gyro.gyro.z);
+  
+  Serial.println();
   
   delay(100);
 
