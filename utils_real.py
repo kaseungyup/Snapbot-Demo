@@ -320,7 +320,7 @@ def run_snapbot_tps(qpos, tps_coef, snapbot, Hz, max_sec, VERBOSE=False, ROS_pub
         cv2.destroyAllWindows()
 
 
-def publish_xy(tps_coef, Hz, max_sec, VERBOSE=False):
+def publish_xy(tps_coef, Hz, max_sec, LOG_INFO, VERBOSE=False):
     x = np.linspace(170,470,4)
     y = np.linspace(90,390,4)
     X, Y = np.meshgrid(x,y)
@@ -371,7 +371,7 @@ def publish_xy(tps_coef, Hz, max_sec, VERBOSE=False):
             tanx = abs(((ptC[0]+ptD[0])/2) - cX)
             rad = math.atan2(tanx,tany)
             deg = int(rad * 180 / math.pi)
-            apriltag_publisher(real_center_pos[0, 1], -real_center_pos[0, 0], Hz)
+            apriltag_publisher(real_center_pos[0, 1], -real_center_pos[0, 0], Hz, LOG_INFO)
             
             if VERBOSE: 
                 cv2.putText(color_image, "({},{}),{}".format(cX, cY, deg), (ptA[0], ptA[1] - 15),

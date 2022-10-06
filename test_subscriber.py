@@ -11,15 +11,16 @@ acc_z = 0.0
 # y = 0.0
 
 def callback(data):
-    global acc_x, acc_y, acc_z
-    array = data.data.split()
-    acc_x = float(array[0])
-    acc_y = float(array[1])
-    acc_z = float(array[2])
-    print(acc_x * acc_y + acc_z)
+    # global acc_x, acc_y, acc_z
+    # array = data.data.split()
+    # acc_x = float(array[0])
+    # acc_y = float(array[1])
+    # acc_z = float(array[2])
+    # print(acc_x, acc_y, acc_z)
+    print(data)
    
-def get_acc():
-    return acc_x, acc_y, acc_z
+# def get_acc():
+#     return acc_x, acc_y, acc_z
 
 # def callback2(data):
 #     global x,y

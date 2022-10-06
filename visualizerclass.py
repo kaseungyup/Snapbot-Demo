@@ -51,13 +51,13 @@ class VisualizerClass(object):
              self.marker_array.markers.pop(0)
         self.marker_array.markers.append(marker) # append
 
-    def append_text(self,x=0.0,y=0.0,z=0.0,r=0.1,text='text',
+    def append_text(self,x=0.0,y=0.0,z=0.0,r=0.1,text='text',scale=Vector3(0,0,1),
             frame_id='map',color=ColorRGBA(1.0,1.0,1.0,0.5)):
         marker = Marker(
                 type=Marker.TEXT_VIEW_FACING,
                 text=text,
                 pose=Pose(Point(x, y, z), Quaternion(0, 0, 0, 1)),
-                scale=Vector3(r, r, r),
+                scale=scale,
                 header=Header(frame_id=frame_id),
                 action=Marker.ADD,
                 color=color,

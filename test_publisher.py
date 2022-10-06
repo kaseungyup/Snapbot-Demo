@@ -6,7 +6,7 @@ from std_msgs.msg import String, Float64MultiArray
 # def talker():
 #     pub = rospy.Publisher('apriltag_position', Float64MultiArray, queue_size=10)
 #     rospy.init_node('apriltag_publisher', anonymous=True)
-#     rate = rospy.Rate(10) #10Hz
+#     rate = rospy.Rate(2) #10Hz
 
 #     while not rospy.is_shutdown():
 #         data = Float64MultiArray()

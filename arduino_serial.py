@@ -1,16 +1,26 @@
 #!/bin/python3
 
 import serial
-import time
-from publisher import x_publisher
+import rospy
+from std_msgs.msg import String
 
 ser = serial.Serial('/dev/ttyUSB0', 115200, timeout=1)
 
-for i in range(500):
-    line = ser.readline()   # read a byte
-    if line:
-        string = line.decode()  # convert the byte string to a unicode string
-        x_publisher(string, 100)
+def imu_publisher(Hz=20):
+    pub = rospy.Publisher('imu_sensor', String, queue_size=10)
+    rospy.init_node('imu_publisher', anonymous=True)
+    rate = rospy.Rate(Hz)
 
-ser.close()
+    while not rospy.is_shutdown():
+        line = ser.readline()
+        data = line.decode()
+        rospy.loginfo(data)
+        pub.publish(data)
+        rate.sleep
 
+if __name__ == '__main__':
+    try:
+        imu_publisher()
+    except rospy.ROSInterruptException: pass
+
+    ser.close()
