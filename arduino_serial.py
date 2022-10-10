@@ -6,7 +6,7 @@ from std_msgs.msg import String
 
 ser = serial.Serial('/dev/ttyUSB0', 115200, timeout=1)
 
-def imu_publisher(Hz=20):
+def imu_publisher(Hz=100):
     pub = rospy.Publisher('imu_sensor', String, queue_size=10)
     rospy.init_node('imu_publisher', anonymous=True)
     rate = rospy.Rate(Hz)

@@ -35,12 +35,12 @@ class VisualizerClass(object):
                         MarkerArray, queue_size=5)
                     
 
-    def append_marker(self,x=0.0,y=0.0,z=0.0,r=0.1,frame_id='map',
+    def append_marker(self,Q=Quaternion(0,0,0,1),scale=Vector3(0.1, 0.1, 0.1),x=0.0,y=0.0,z=0.0,frame_id='map',
             color=ColorRGBA(0.0,1.0,0.0,0.5),marker_type=Marker.SPHERE):
         marker = Marker(
                 type=marker_type,
-                pose=Pose(Point(x, y, z), Quaternion(0, 0, 0, 1)),
-                scale=Vector3(r, r, r),
+                pose=Pose(Point(x, y, z), Q),
+                scale=scale,
                 header=Header(frame_id=frame_id,stamp=rospy.get_rostime()),
                 action=Marker.ADD,
                 color=color,

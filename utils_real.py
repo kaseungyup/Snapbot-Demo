@@ -325,6 +325,7 @@ def publish_xy(tps_coef, Hz, max_sec, LOG_INFO, VERBOSE=False):
     y = np.linspace(90,390,4)
     X, Y = np.meshgrid(x,y)
     ctrl_xy = np.stack([X,Y],axis=2).reshape(-1,2)
+    real_center_pos = np.zeros([1,2])
 
     pipeline = rs.pipeline()
     config = rs.config()
@@ -367,15 +368,17 @@ def publish_xy(tps_coef, Hz, max_sec, LOG_INFO, VERBOSE=False):
             real_center_pos = tps_trans(center_pos, ctrl_xy, tps_coef)
             if VERBOSE : 
                 cv2.circle(color_image, (cX, cY), 5, (0, 0, 255), -1)
-            tany = abs(((ptC[1]+ptD[1])/2) - cY)
-            tanx = abs(((ptC[0]+ptD[0])/2) - cX)
-            rad = math.atan2(tanx,tany)
+            tany = abs((ptC[1]+ptD[1])/2 - cY)
+            tanx = (ptC[0]+ptD[0])/2 - cX
+            rad = math.atan2(tanx, tany)
             deg = int(rad * 180 / math.pi)
-            apriltag_publisher(real_center_pos[0, 1], -real_center_pos[0, 0], Hz, LOG_INFO)
+            apriltag_publisher(real_center_pos[0, 1], -real_center_pos[0, 0], rad, Hz, LOG_INFO)
             
             if VERBOSE: 
                 cv2.putText(color_image, "({},{}),{}".format(cX, cY, deg), (ptA[0], ptA[1] - 15),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+        
+        #apriltag_publisher(real_center_pos[0, 1], -real_center_pos[0, 0], Hz, LOG_INFO)
         if VERBOSE: 
             cv2.imshow("Frame", color_image)
             if cv2.waitKey(20) == 27:

@@ -38,6 +38,6 @@ void loop() {
   
   Serial.println();
   
-  delay(100);
+  delay(10);
 
 }
