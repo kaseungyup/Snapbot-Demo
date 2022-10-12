@@ -321,6 +321,7 @@ def run_snapbot_tps(qpos, tps_coef, snapbot, Hz, max_sec, VERBOSE=False, ROS_pub
 
 
 def publish_xy(tps_coef, Hz, max_sec, LOG_INFO, VERBOSE=False):
+    real_xy_y_traj = np.empty(shape=(0,2))
     x = np.linspace(170,470,4)
     y = np.linspace(90,390,4)
     X, Y = np.meshgrid(x,y)
@@ -334,6 +335,26 @@ def publish_xy(tps_coef, Hz, max_sec, LOG_INFO, VERBOSE=False):
     pipeline.start(config)
 
     DETECT = False
+    
+    while not DETECT:
+        frames = pipeline.wait_for_frames()
+        color_frame = frames.get_color_frame()
+        color_image = np.asanyarray(color_frame.get_data())
+        gray = cv2.cvtColor(color_image, cv2.COLOR_BGR2GRAY)
+        options = apriltag.DetectorOptions(families="tag36h11")
+        detector = apriltag.Detector(options)
+        results = detector.detect(gray)
+        for r in results:
+            (ptA, ptB, ptC, ptD) = r.corners
+            initPos_x = int(r.center[0])
+            initPos_y = int(r.center[1])
+            inittany = abs(((ptC[1]+ptD[1])/2) - initPos_y)
+            inittanx = abs(((ptC[0]+ptD[0])/2) - initPos_x)
+            initrad = math.atan2(inittanx,inittany)
+        init_pos = np.array([[initPos_x,initPos_y]])
+        real_init_pos = tps_trans(init_pos, ctrl_xy, tps_coef)
+        if init_pos.shape[0] == 1:
+            DETECT = True
 
     time.sleep(1)
     idx, flag, threshold = 0, False, 0
@@ -372,7 +393,10 @@ def publish_xy(tps_coef, Hz, max_sec, LOG_INFO, VERBOSE=False):
             tanx = (ptC[0]+ptD[0])/2 - cX
             rad = math.atan2(tanx, tany)
             deg = int(rad * 180 / math.pi)
-            apriltag_publisher(real_center_pos[0, 1], -real_center_pos[0, 0], rad, Hz, LOG_INFO)
+            cali_x = real_center_pos[0, 0]-real_init_pos[0, 0]
+            cali_y = real_center_pos[0, 1]-real_init_pos[0, 1]
+            real_xy_y_traj = np.append(real_xy_y_traj, np.array([[cali_y, -cali_x]]), axis=0)
+            apriltag_publisher(real_xy_y_traj[-1, 1], -real_xy_y_traj[-1, 0], rad, Hz, LOG_INFO)
             
             if VERBOSE: 
                 cv2.putText(color_image, "({},{}),{}".format(cX, cY, deg), (ptA[0], ptA[1] - 15),
