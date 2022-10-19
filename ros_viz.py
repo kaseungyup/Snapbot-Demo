@@ -79,6 +79,10 @@ if __name__ == '__main__':
     pos_data = []
     pos_data.append(np.array([0, 0, 0]))
 
+    traj = np.load("trajectory.npy")
+    x_traj = traj[:,0]
+    y_traj = traj[:,1]
+
     # Set terminator
     # signal.signal(signal.SIGINT, partial(signal_handler,tmr_plot))
 
@@ -111,9 +115,9 @@ if __name__ == '__main__':
             orientation_mahony = Mahony(gyr=gyro_data[-40:], acc=acc_data[-40:])
             q_mahony = orientation_mahony.Q[-1,:]
 
-            Earth_frame_acc = q_rot(q_conj(q_mahony), np.array([ax, ay, az])) - np.array([0,0,9.81])
-            Earth_frame_acc_data.append(np.array(Earth_frame_acc))
-            vel, pos = update_position(Earth_frame_acc[-40:], vel_data[-40:], pos_data[-40:], Hz)
+            # Earth_frame_acc = q_rot(q_conj(q_mahony), np.array([ax, ay, az])) - np.array([0,0,9.81])
+            # Earth_frame_acc_data.append(np.array(Earth_frame_acc))
+            # vel, pos = update_position(Earth_frame_acc[-40:], vel_data[-40:], pos_data[-40:], Hz)
             #print("vel: ", vel)
             #print("pos: ", pos)
 
@@ -135,6 +139,9 @@ if __name__ == '__main__':
             # text2 = "Kalman\nRoll: %f Pitch: %f Yaw: %f"%(-roll2*R2D,-pitch2*R2D,yaw2*R2D)
             # V.append_text(x=-2,y=0,z=1.3,r=1.0,text=text2,scale=Vector3(0,0,0.3),
             #     frame_id='map',color=ColorRGBA(1.0,1.0,1.0,0.5))
+
+            V.append_linestrip(x_array=x_traj,y_array=y_traj,z=0.0,scale=Vector3(0.01,0,0),
+                frame_id='map',color=ColorRGBA(1.0,1.0,1.0,1.0),marker_type=Marker.LINE_STRIP)
 
             V.append_text(x=x,y=y,z=1.3,r=1.0,text=text,scale=Vector3(0,0,0.3),
                 frame_id='map',color=ColorRGBA(1.0,1.0,1.0,0.5))
