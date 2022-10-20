@@ -13,8 +13,19 @@ def apriltag_publisher(x_pos, y_pos, yaw, Hz, LOG_INFO = True):
     pub.publish(pos)
     rate.sleep()
 
-if __name__ == '__main__':
-    try:
-        apriltag_publisher()
-    except rospy.ROSInterruptException:
-        pass
+def check_publisher(flag, Hz):
+    pub = rospy.Publisher('run_check', String, queue_size=10)
+    rospy.init_node('check_publisher', anonymous=True)
+    rate = rospy.Rate(Hz)
+
+    msg = "%s" % flag
+    pub.publish(msg)
+    rate.sleep
+
+
+
+# if __name__ == '__main__':
+#     try:
+#         apriltag_publisher()
+#     except rospy.ROSInterruptException:
+#         pass
