@@ -50,13 +50,13 @@ def talker():
         rate.sleep()
 
 if __name__ == '__main__':
-    #talker()
-    t = timer(_HZ=1, _MAX_SEC=np.inf)
-    while t.is_notfinished():
-        if t.do_run():
-            index += 1
-            if index % 20: flag_publisher(1)
-            else: flag_publisher(0)
+    talker()
+    # t = timer(_HZ=1, _MAX_SEC=np.inf)
+    # while t.is_notfinished():
+    #     if t.do_run():
+    #         index += 1
+    #         if index % 20: flag_publisher(1)
+    #         else: flag_publisher(0)
 
 
 

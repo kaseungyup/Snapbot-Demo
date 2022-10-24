@@ -40,7 +40,7 @@ from datetime import datetime
 a = 0
 b = 0
 
-flag = 0
+flag = 1
 
 def callback(data):
     global a, b
@@ -62,17 +62,21 @@ def get_flag():
 if __name__ == "__main__":
     rospy.init_node("test_subscriber", anonymous=True)
     rospy.Subscriber("test", String, callback)
+    rospy.Subscriber("flag", String, callback3)
     
     tmr_plot = Timer(_name='Plot',_HZ=1,_MAX_SEC=np.inf,_VERBOSE=True)
     tmr_plot.start()
 
     temparray = np.empty(shape=(0,2))
+    flag_array = []
     
-    while tmr_plot.is_notfinished(): # loop 
+    while tmr_plot.is_notfinished(): # loosp 
         if tmr_plot.do_run(): # plot (20HZ)
             check_flag = get_flag()
-            
-            while(check_flag):
+            flag_array.append(check_flag)
+            # print(flag_array[-1])
+
+            if flag_array[-1]:
                 rx, ry = get_data()
                 temparray = np.append(temparray, np.array([[rx, ry]]), axis=0)
                 if tmr_plot.tick > 1: 
@@ -80,8 +84,8 @@ if __name__ == "__main__":
                     y = ry - temparray[1,1]
                     print(x,y)
 
-            if check_flag == 0:
-                rs_pos_data = np.empty(shape=(0,2))
+            else:
+                temparray = np.array([[temparray[-1,0], temparray[-1,1]]])
                 acc_data = []
                 gyro_data = []
                 
