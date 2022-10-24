@@ -116,9 +116,10 @@ if __name__ == '__main__':
             while(check_flag):
                 rs_x, rs_y, april_yaw = get_position()
                 rs_pos_data = np.append(rs_pos_data, np.array([[rs_x, rs_y]]), axis=0)
-                x = rs_x - rs_pos_data[0, 0]
-                y = rs_y - rs_pos_data[0, 1]
-                #print(x,y)
+                if tmr_plot.tick > 1:
+                    x = rs_x - rs_pos_data[1, 0]
+                    y = rs_y - rs_pos_data[1, 1]
+                    #print(x,y)
 
                 ax, ay, az = get_acc()
                 acc_data.append([ax, ay, az])

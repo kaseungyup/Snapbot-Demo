@@ -16,24 +16,37 @@ from std_msgs.msg import String, Float64MultiArray
 #         pub.publish(data)
 #         rate.sleep()
 
-# if __name__ == '__main__':
-#     try:
-#         talker()
-#     except rospy.ROSInterruptException: pass
 
+# def talker():
+#     pub = rospy.Publisher('imu_sensor', String, queue_size= 10)
+#     rospy.init_node('imu_publisher', anonymous=True)
+#     rate = rospy.Rate(10) #10Hz
+
+#     while not rospy.is_shutdown():
+#         data = "1.00 2.00 3.00\r\n"
+#         rospy.loginfo(data)
+#         pub.publish(data)
+#         rate.sleep()
+
+a = 0
+b = 10
 
 def talker():
-    pub = rospy.Publisher('imu_sensor', String, queue_size= 10)
-    rospy.init_node('imu_publisher', anonymous=True)
-    rate = rospy.Rate(10) #10Hz
+    global a, b
+    pub = rospy.Publisher("test", String, queue_size=10)
+    rospy.init_node("test_publisher", anonymous=True)
+    rate = rospy.Rate(1)
 
     while not rospy.is_shutdown():
-        data = "1.00 2.00 3.00\r\n"
+        data = "%s %s"%(a,b)
         rospy.loginfo(data)
         pub.publish(data)
+        a += 1
+        b += 2
         rate.sleep()
 
 if __name__ == '__main__':
     try:
         talker()
     except rospy.ROSInterruptException: pass
+
