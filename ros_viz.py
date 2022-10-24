@@ -155,7 +155,7 @@ if __name__ == '__main__':
                 #     frame_id='map',color=ColorRGBA(1.0,1.0,1.0,0.5))
 
             else:
-                rs_pos_data = np.array([[rs_pos_data[-1,0], rs_pos_data[-1,1]]])
+                rs_pos_data = np.array([0, 0])
                 acc_data = []
                 gyro_data = []
                 V.reset_markers()            
