@@ -13,9 +13,9 @@ def apriltag_publisher(x_pos, y_pos, yaw, Hz, LOG_INFO = True):
     pub.publish(pos)
     rate.sleep()
 
-def check_publisher(flag):
-    pub = rospy.Publisher('run_check', String, queue_size=10)
-    rospy.init_node('check_publisher', anonymous=True)
+def flag_publisher(flag):
+    pub = rospy.Publisher('flag', String, queue_size=10)
+    rospy.init_node('flag_publisher', anonymous=True)
 
     msg = "%s" % flag
     pub.publish(msg)
@@ -23,8 +23,8 @@ def check_publisher(flag):
 
 
 
-if __name__ == '__main__':
-    try:
-        check_publisher(1)
-    except rospy.ROSInterruptException:
-        pass
+# if __name__ == '__main__':
+#     try:
+#         flag_publisher(1)
+#     except rospy.ROSInterruptException:
+#         pass

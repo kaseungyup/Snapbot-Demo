@@ -8,7 +8,7 @@ import pyrealsense2 as rs
 from realworld_func.class_motionhelper import timer
 from realworld_func.class_xm430 import xm430
 from utils_track import tps_trans
-from publisher import apriltag_publisher, check_publisher
+from publisher import apriltag_publisher, flag_publisher
 #import matplotlib.patches as patches 
 #import matplotlib.pyplot as plt
 #import matplotlib
@@ -98,7 +98,7 @@ def run_snapbot(qpos, snapbot, Hz, max_sec):
     while t.is_notfinished():
         if t.do_run():
             pos = traj[idx]
-            check_publisher(1)
+            flag_publisher(1)
             if not flag:
                 flag = True
                 threshold = pos
@@ -108,7 +108,7 @@ def run_snapbot(qpos, snapbot, Hz, max_sec):
             if idx == traj.shape[0]:
                 t.finish()
     print("FINISHED")
-    check_publisher(0)
+    flag_publisher(0)
 
 def run_snapbot_3(traj, snapbot, Hz, max_sec):
     t = timer(_HZ=Hz, _MAX_SEC=max_sec)

@@ -77,7 +77,7 @@ if __name__ == '__main__':
     rospy.init_node('subscriber', anonymous=True)
     rospy.Subscriber("apriltag_position", String, callback)
     rospy.Subscriber("imu_sensor", String, callback2)
-    rospy.Subscriber("run_check", String, callback3)
+    rospy.Subscriber("flag", String, callback3)
 
     tmr_plot = Timer(_name='Plot',_HZ=Hz,_MAX_SEC=np.inf,_VERBOSE=True)
     

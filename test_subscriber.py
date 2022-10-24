@@ -40,6 +40,8 @@ from datetime import datetime
 a = 0
 b = 0
 
+flag = 0
+
 def callback(data):
     global a, b
     array = data.data.split()
@@ -48,6 +50,14 @@ def callback(data):
 
 def get_data():
     return a, b
+
+def callback3(data):
+    global flag
+    array = data.data.split()
+    flag = int(array[0])
+
+def get_flag():
+    return flag
 
 if __name__ == "__main__":
     rospy.init_node("test_subscriber", anonymous=True)
@@ -60,11 +70,18 @@ if __name__ == "__main__":
     
     while tmr_plot.is_notfinished(): # loop 
         if tmr_plot.do_run(): # plot (20HZ)
-            rx, ry = get_data()
-            #print("rx: %s, ry: %s"%(rx,ry))
-            temparray = np.append(temparray, np.array([[rx, ry]]), axis=0)
-            if tmr_plot.tick > 1: 
-                x = rx - temparray[1,0]
-                y = ry - temparray[1,1]
-                print(x,y)
+            check_flag = get_flag()
+            
+            while(check_flag):
+                rx, ry = get_data()
+                temparray = np.append(temparray, np.array([[rx, ry]]), axis=0)
+                if tmr_plot.tick > 1: 
+                    x = rx - temparray[1,0]
+                    y = ry - temparray[1,1]
+                    print(x,y)
+
+            if check_flag == 0:
+                rs_pos_data = np.empty(shape=(0,2))
+                acc_data = []
+                gyro_data = []
                 

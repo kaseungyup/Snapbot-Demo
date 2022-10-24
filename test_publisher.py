@@ -28,8 +28,12 @@ from std_msgs.msg import String, Float64MultiArray
 #         pub.publish(data)
 #         rate.sleep()
 
+from publisher import flag_publisher
+from realworld_func.class_motionhelper import timer
+
 a = 0
 b = 10
+index = 0
 
 def talker():
     global a, b
@@ -46,7 +50,13 @@ def talker():
         rate.sleep()
 
 if __name__ == '__main__':
-    try:
-        talker()
-    except rospy.ROSInterruptException: pass
+    #talker()
+    t = timer(_HZ=1, _MAX_SEC=np.inf)
+    while t.is_notfinished():
+        if t.do_run():
+            index += 1
+            if index % 20: flag_publisher(1)
+            else: flag_publisher(0)
+
+
 
