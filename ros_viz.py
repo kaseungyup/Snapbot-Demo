@@ -22,7 +22,7 @@ apriltag_x = 0.0; apriltag_y = 0.0; apriltag_yaw = 0.0
 acc_x = 0.0; acc_y = 0.0; acc_z = 0.0
 gyro_x = 0.0; gyro_y = 0.0; gyro_z = 0.0
 
-flag = False
+flag = 1
 
 D2R = np.pi / 180
 R2D = 180 / np.pi
@@ -41,9 +41,6 @@ def get_position():
 def callback2(data):
     global acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z
     array = data.data.split()
-    # acc_x = float(array[1])
-    # acc_y = float(array[2])
-    # acc_z = -float(array[0])
     acc_x = -float(array[1])
     acc_y = float(array[0])
     acc_z = float(array[2])
@@ -83,9 +80,9 @@ if __name__ == '__main__':
     
     rs_pos_data = np.empty(shape=(0,2))
     acc_data = []
-    #Earth_frame_acc_data = []
     gyro_data = []
     #quat_data = []
+    #Earth_frame_acc_data = []
     #vel_data = []
     #vel_data.append(np.array([0, 0, 0]))
     #pos_data = []
@@ -95,6 +92,8 @@ if __name__ == '__main__':
     x_traj = traj[:,0]
     y_traj = traj[:,1]
 
+    flag_array = []
+
     # Set terminator
     # signal.signal(signal.SIGINT, partial(signal_handler,tmr_plot))
 
@@ -102,18 +101,16 @@ if __name__ == '__main__':
     V = VisualizerClass(name='simple viz',HZ=Hz)
     
     # Start the loop 
-
     tmr_plot.start()
     while tmr_plot.is_notfinished(): # loop 
         if tmr_plot.do_run(): # plot (20HZ)
-            tick = tmr_plot.tick
-
             V.reset_markers()            
             V.reset_texts()
 
             check_flag = get_flag()
+            flag_array.append(check_flag)
             
-            while(check_flag):
+            if flag_array[-1]:
                 rs_x, rs_y, april_yaw = get_position()
                 rs_pos_data = np.append(rs_pos_data, np.array([[rs_x, rs_y]]), axis=0)
                 if tmr_plot.tick > 1:
@@ -121,48 +118,48 @@ if __name__ == '__main__':
                     y = rs_y - rs_pos_data[1, 1]
                     #print(x,y)
 
-                ax, ay, az = get_acc()
-                acc_data.append([ax, ay, az])
-                text = "Acc_x: %f Acc_y: %f Acc_z: %f"%(ax, ay, az)
+                # ax, ay, az = get_acc()
+                # acc_data.append([ax, ay, az])
+                # text = "Acc_x: %f Acc_y: %f Acc_z: %f"%(ax, ay, az)
 
-                gx, gy, gz = get_gyro()
-                gyro_data.append([gx, gy, gz])
+                # gx, gy, gz = get_gyro()
+                # gyro_data.append([gx, gy, gz])
 
-                orientation_mahony = Mahony(gyr=gyro_data[-40:], acc=acc_data[-40:])
-                q_mahony = orientation_mahony.Q[-1,:]
+                # orientation_mahony = Mahony(gyr=gyro_data[-40:], acc=acc_data[-40:])
+                # q_mahony = orientation_mahony.Q[-1,:]
 
-                # Earth_frame_acc = q_rot(q_conj(q_mahony), np.array([ax, ay, az])) - np.array([0,0,9.81])
-                # Earth_frame_acc_data.append(np.array(Earth_frame_acc))
-                # vel, pos = update_position(Earth_frame_acc[-40:], vel_data[-40:], pos_data[-40:], Hz)
-                #print("vel: ", vel)
-                #print("pos: ", pos)
+                # # Earth_frame_acc = q_rot(q_conj(q_mahony), np.array([ax, ay, az])) - np.array([0,0,9.81])
+                # # Earth_frame_acc_data.append(np.array(Earth_frame_acc))
+                # # vel, pos = update_position(Earth_frame_acc[-40:], vel_data[-40:], pos_data[-40:], Hz)
 
-                roll1, pitch1, yaw1 = quaternion_to_vector(q_mahony[0],q_mahony[1],q_mahony[2],q_mahony[3])
-                #yaw = april_yaw
-                #print(roll,pitch,yaw)
+                # roll1, pitch1, yaw1 = quaternion_to_vector(q_mahony[0],q_mahony[1],q_mahony[2],q_mahony[3])
+                # #yaw = april_yaw
 
-                V.append_marker(Quaternion(*quaternion_from_euler(-roll1,-pitch1,yaw1)),Vector3(1,0.3,0.3),x=x,y=y,z=0,frame_id='map',
-                    color=ColorRGBA(1.0,0.0,0.0,0.5),marker_type=Marker.ARROW)
-                # text1 = "Mahony\nRoll: %f Pitch: %f Yaw: %f"%(-roll1*R2D,-pitch1*R2D,yaw1*R2D)
-                # V.append_text(x=2,y=0,z=1.3,r=1.0,text=text1,scale=Vector3(0,0,0.3),
-                #     frame_id='map',color=ColorRGBA(1.0,1.0,1.0,0.5))
-
-                # orientation_kalman = EKF(gyr=gyro_data[-40:], acc=acc_data[-40:], mag=None)
-                # q_kalman = orientation_kalman.Q[-1,:]
-                # roll2, pitch2, yaw2 = quaternion_to_vector(q_kalman[0],q_kalman[1],q_kalman[2],q_kalman[3])
-                # V.append_marker(Quaternion(*quaternion_from_euler(-roll2,-pitch2,yaw2)),Vector3(1,0.3,0.3),x=-2,y=0,z=0,frame_id='map',
+                # V.append_marker(Quaternion(*quaternion_from_euler(-roll1,-pitch1,yaw1)),Vector3(1,0.3,0.3),x=x,y=y,z=0,frame_id='map',
                 #     color=ColorRGBA(1.0,0.0,0.0,0.5),marker_type=Marker.ARROW)
-                # text2 = "Kalman\nRoll: %f Pitch: %f Yaw: %f"%(-roll2*R2D,-pitch2*R2D,yaw2*R2D)
-                # V.append_text(x=-2,y=0,z=1.3,r=1.0,text=text2,scale=Vector3(0,0,0.3),
+        
+                # # text1 = "Mahony\nRoll: %f Pitch: %f Yaw: %f"%(-roll1*R2D,-pitch1*R2D,yaw1*R2D)
+                # # V.append_text(x=2,y=0,z=1.3,r=1.0,text=text1,scale=Vector3(0,0,0.3),
+                # #     frame_id='map',color=ColorRGBA(1.0,1.0,1.0,0.5))
+                
+                # # orientation_kalman = EKF(gyr=gyro_data[-40:], acc=acc_data[-40:], mag=None)
+                # # q_kalman = orientation_kalman.Q[-1,:]
+                # # roll2, pitch2, yaw2 = quaternion_to_vector(q_kalman[0],q_kalman[1],q_kalman[2],q_kalman[3])
+                # # V.append_marker(Quaternion(*quaternion_from_euler(-roll2,-pitch2,yaw2)),Vector3(1,0.3,0.3),x=-2,y=0,z=0,frame_id='map',
+                # #     color=ColorRGBA(1.0,0.0,0.0,0.5),marker_type=Marker.ARROW)
+                # # text2 = "Kalman\nRoll: %f Pitch: %f Yaw: %f"%(-roll2*R2D,-pitch2*R2D,yaw2*R2D)
+                # # V.append_text(x=-2,y=0,z=1.3,r=1.0,text=text2,scale=Vector3(0,0,0.3),
+                # #     frame_id='map',color=ColorRGBA(1.0,1.0,1.0,0.5))
+
+                # V.append_text(x=x,y=y,z=1.3,r=1.0,text=text,scale=Vector3(0,0,0.3),
                 #     frame_id='map',color=ColorRGBA(1.0,1.0,1.0,0.5))
 
-                V.append_text(x=x,y=y,z=1.3,r=1.0,text=text,scale=Vector3(0,0,0.3),
-                    frame_id='map',color=ColorRGBA(1.0,1.0,1.0,0.5))
-
-            if check_flag == 0:
-                rs_pos_data = np.empty(shape=(0,2))
+            else:
+                rs_pos_data = np.array([[rs_pos_data[-1,0], rs_pos_data[-1,1]]])
                 acc_data = []
                 gyro_data = []
+                V.reset_markers()            
+                V.reset_texts()
 
             V.append_linestrip(x_array=x_traj,y_array=y_traj,z=0.0,scale=Vector3(0.01,0,0),
                 frame_id='map',color=ColorRGBA(1.0,1.0,1.0,1.0),marker_type=Marker.LINE_STRIP)
