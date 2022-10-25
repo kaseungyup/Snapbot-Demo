@@ -103,7 +103,7 @@ if __name__ == '__main__':
     # Start the loop 
     tmr_plot.start()
     while tmr_plot.is_notfinished(): # loop 
-        if tmr_plot.do_run(): # plot (20HZ)
+        if tmr_plot.do_run(): # plot (HZ)
             V.reset_markers()            
             V.reset_texts()
 
@@ -118,38 +118,38 @@ if __name__ == '__main__':
                     y = rs_y - rs_pos_data[1, 1]
                     #print(x,y)
 
-                # ax, ay, az = get_acc()
-                # acc_data.append([ax, ay, az])
-                # text = "Acc_x: %f Acc_y: %f Acc_z: %f"%(ax, ay, az)
+                ax, ay, az = get_acc()
+                acc_data.append([ax, ay, az])
+                text = "Acc_x: %f Acc_y: %f Acc_z: %f"%(ax, ay, az)
 
-                # gx, gy, gz = get_gyro()
-                # gyro_data.append([gx, gy, gz])
+                gx, gy, gz = get_gyro()
+                gyro_data.append([gx, gy, gz])
 
-                # orientation_mahony = Mahony(gyr=gyro_data[-40:], acc=acc_data[-40:])
-                # q_mahony = orientation_mahony.Q[-1,:]
+                orientation_mahony = Mahony(gyr=gyro_data[-40:], acc=acc_data[-40:])
+                q_mahony = orientation_mahony.Q[-1,:]
 
-                # # Earth_frame_acc = q_rot(q_conj(q_mahony), np.array([ax, ay, az])) - np.array([0,0,9.81])
-                # # Earth_frame_acc_data.append(np.array(Earth_frame_acc))
-                # # vel, pos = update_position(Earth_frame_acc[-40:], vel_data[-40:], pos_data[-40:], Hz)
+                # Earth_frame_acc = q_rot(q_conj(q_mahony), np.array([ax, ay, az])) - np.array([0,0,9.81])
+                # Earth_frame_acc_data.append(np.array(Earth_frame_acc))
+                # vel, pos = update_position(Earth_frame_acc[-40:], vel_data[-40:], pos_data[-40:], Hz)
 
-                # roll1, pitch1, yaw1 = quaternion_to_vector(q_mahony[0],q_mahony[1],q_mahony[2],q_mahony[3])
-                # #yaw = april_yaw
+                roll1, pitch1, yaw1 = quaternion_to_vector(q_mahony[0],q_mahony[1],q_mahony[2],q_mahony[3])
+                #yaw = april_yaw
 
-                # V.append_marker(Quaternion(*quaternion_from_euler(-roll1,-pitch1,yaw1)),Vector3(1,0.3,0.3),x=x,y=y,z=0,frame_id='map',
-                #     color=ColorRGBA(1.0,0.0,0.0,0.5),marker_type=Marker.ARROW)
+                V.append_marker(Quaternion(*quaternion_from_euler(-roll1,-pitch1,yaw1)),Vector3(1,0.3,0.3),x=x,y=y,z=0,frame_id='map',
+                    color=ColorRGBA(1.0,0.0,0.0,0.5),marker_type=Marker.ARROW)
         
-                # # text1 = "Mahony\nRoll: %f Pitch: %f Yaw: %f"%(-roll1*R2D,-pitch1*R2D,yaw1*R2D)
-                # # V.append_text(x=2,y=0,z=1.3,r=1.0,text=text1,scale=Vector3(0,0,0.3),
-                # #     frame_id='map',color=ColorRGBA(1.0,1.0,1.0,0.5))
+                # text1 = "Mahony\nRoll: %f Pitch: %f Yaw: %f"%(-roll1*R2D,-pitch1*R2D,yaw1*R2D)
+                # V.append_text(x=2,y=0,z=1.3,r=1.0,text=text1,scale=Vector3(0,0,0.3),
+                #     frame_id='map',color=ColorRGBA(1.0,1.0,1.0,0.5))
                 
-                # # orientation_kalman = EKF(gyr=gyro_data[-40:], acc=acc_data[-40:], mag=None)
-                # # q_kalman = orientation_kalman.Q[-1,:]
-                # # roll2, pitch2, yaw2 = quaternion_to_vector(q_kalman[0],q_kalman[1],q_kalman[2],q_kalman[3])
-                # # V.append_marker(Quaternion(*quaternion_from_euler(-roll2,-pitch2,yaw2)),Vector3(1,0.3,0.3),x=-2,y=0,z=0,frame_id='map',
-                # #     color=ColorRGBA(1.0,0.0,0.0,0.5),marker_type=Marker.ARROW)
-                # # text2 = "Kalman\nRoll: %f Pitch: %f Yaw: %f"%(-roll2*R2D,-pitch2*R2D,yaw2*R2D)
-                # # V.append_text(x=-2,y=0,z=1.3,r=1.0,text=text2,scale=Vector3(0,0,0.3),
-                # #     frame_id='map',color=ColorRGBA(1.0,1.0,1.0,0.5))
+                # orientation_kalman = EKF(gyr=gyro_data[-40:], acc=acc_data[-40:], mag=None)
+                # q_kalman = orientation_kalman.Q[-1,:]
+                # roll2, pitch2, yaw2 = quaternion_to_vector(q_kalman[0],q_kalman[1],q_kalman[2],q_kalman[3])
+                # V.append_marker(Quaternion(*quaternion_from_euler(-roll2,-pitch2,yaw2)),Vector3(1,0.3,0.3),x=-2,y=0,z=0,frame_id='map',
+                #     color=ColorRGBA(1.0,0.0,0.0,0.5),marker_type=Marker.ARROW)
+                # text2 = "Kalman\nRoll: %f Pitch: %f Yaw: %f"%(-roll2*R2D,-pitch2*R2D,yaw2*R2D)
+                # V.append_text(x=-2,y=0,z=1.3,r=1.0,text=text2,scale=Vector3(0,0,0.3),
+                #     frame_id='map',color=ColorRGBA(1.0,1.0,1.0,0.5))
 
                 # V.append_text(x=x,y=y,z=1.3,r=1.0,text=text,scale=Vector3(0,0,0.3),
                 #     frame_id='map',color=ColorRGBA(1.0,1.0,1.0,0.5))
