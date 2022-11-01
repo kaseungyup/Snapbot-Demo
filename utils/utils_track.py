@@ -1,12 +1,8 @@
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib
 # matplotlib.use('agg')
-try:
-    import pyrealsense2 as rs
-except:
-    pass
+import pyrealsense2 as rs
 import scipy.optimize
 import functools
 from skspatial.objects import Plane

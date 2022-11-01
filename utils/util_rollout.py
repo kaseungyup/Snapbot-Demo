@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from class_grp import get_anchors_from_traj
+from classes.class_grp import get_anchors_from_traj
 
 class ScalerClass(object):
     """ Generate scale and offset based on running mean and stddev along axis=0

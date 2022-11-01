@@ -10,11 +10,11 @@ from std_msgs.msg import ColorRGBA, String
 from geometry_msgs.msg import Vector3, Quaternion
 from tf.transformations import quaternion_from_euler
 
-from timer import Timer
-from visualizerclass import VisualizerClass
-from mahony import Mahony
-from extended_kalman import EKF
-from utils import *
+from classes.timer import Timer
+from classes.visualizerclass import VisualizerClass
+from classes.class_snapbot import quaternion_to_vector
+from filter.mahony import Mahony
+from filter.extended_kalman import EKF
 
 Hz = 50
 apriltag_x = 0.0; apriltag_y = 0.0; apriltag_yaw = 0.0
@@ -23,10 +23,6 @@ acc_x = 0.0; acc_y = 0.0; acc_z = 0.0
 gyro_x = 0.0; gyro_y = 0.0; gyro_z = 0.0
 
 flag = 1
-
-D2R = np.pi / 180
-R2D = 180 / np.pi
-
 
 def callback(data):
     global apriltag_x, apriltag_y, apriltag_yaw 
@@ -82,7 +78,7 @@ if __name__ == '__main__':
     acc_data = []
     gyro_data = []
 
-    traj = np.load("trajectory.npy")
+    traj = np.load("qpos_dlpg/trajectory.npy")
     x_traj = traj[:,0]
     y_traj = traj[:,1]
 

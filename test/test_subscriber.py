@@ -34,7 +34,7 @@ from std_msgs.msg import String, Float64MultiArray
 #     # rospy.Subscriber("apriltag_position", Float64MultiArray, callback2)
 #     rospy.spin()
 
-from timer import Timer
+from classes.timer import Timer
 from datetime import datetime
 
 a = 0
