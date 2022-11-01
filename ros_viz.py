@@ -95,9 +95,6 @@ if __name__ == '__main__':
     tmr_plot.start()
     while tmr_plot.is_notfinished(): # loop 
         if tmr_plot.do_run(): # plot (HZ)
-            # V.reset_markers()            
-            # V.reset_texts()
-
             check_flag = get_flag()
             flag_array.append(check_flag)
             x = [0]; y = [0]
@@ -108,7 +105,7 @@ if __name__ == '__main__':
                 if tmr_plot.tick > 1:
                     x.append(-rs_y + rs_pos_data[1, 1])
                     y.append(rs_x - rs_pos_data[1, 0])
-                    print(x[-1],y[-1])
+                    #print(x[-1],y[-1])
         
             else:
                 rs_pos_data = np.array([[0, 0]])
@@ -128,20 +125,14 @@ if __name__ == '__main__':
             orientation_mahony = Mahony(gyr=gyro_data[-40:], acc=acc_data[-40:])
             q_mahony = orientation_mahony.Q[-1,:]
 
-            roll1, pitch1, yaw1 = quaternion_to_vector(q_mahony[0],q_mahony[1],q_mahony[2],q_mahony[3])
-            yaw1 = april_yaw
+            roll, pitch, yaw = quaternion_to_vector(q_mahony[0],q_mahony[1],q_mahony[2],q_mahony[3])
+            yaw = april_yaw
 
-            # V.append_marker(Quaternion(*quaternion_from_euler(-roll1,-pitch1,yaw1)),Vector3(0.2,0.06,0.06),x=x[-1],y=y[-1],z=0,frame_id='map',
-            #     color=ColorRGBA(1.0,0.0,0.0,0.5),marker_type=Marker.ARROW)
+            V.append_marker(Quaternion(*quaternion_from_euler(-roll,-pitch,yaw)),Vector3(0.2,0.06,0.06),x=x[-1],y=y[-1],z=0,frame_id='map',
+                color=ColorRGBA(1.0,0.0,0.0,0.5),marker_type=Marker.ARROW)
 
-            # V.append_linestrip(x_array=x_traj,y_array=y_traj,z=0.0,scale=Vector3(0.01,0,0),
-            #     frame_id='map',color=ColorRGBA(1.0,1.0,1.0,1.0),marker_type=Marker.LINE_STRIP)
-
-            V.set_marker_line(Q=Quaternion(*quaternion_from_euler(-roll1,-pitch1,yaw1)),marker_x=x[-1],marker_y=y[-1],marker_z=0,
-            line_x=x_traj,line_y=y_traj,line_z=0,
-            marker_scale=Vector3(0.2,0.06,0.06),line_scale=Vector3(0.01,0,0),frame_id='map',
-            marker_color=ColorRGBA(1.0,0.0,0.0,0.5),line_color=ColorRGBA(1.0,1.0,1.0,1.0),
-            marker_type=Marker.ARROW,line_type=Marker.LINE_STRIP)
+            V.append_linestrip(x_array=x_traj,y_array=y_traj,z=0.0,scale=Vector3(0.01,0,0),
+                frame_id='map',color=ColorRGBA(1.0,1.0,1.0,1.0),marker_type=Marker.LINE_STRIP)
 
             V.publish_markers()
             V.publish_texts()

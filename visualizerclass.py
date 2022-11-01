@@ -70,36 +70,6 @@ class VisualizerClass(object):
              self.marker_array.markers.pop(0)
         self.marker_array.markers.append(marker) # append
 
-    def set_marker_line(self,Q=Quaternion(0,0,0,1),marker_x=0.0,marker_y=0.0,marker_z=0.0,
-            line_x=np.array,line_y=np.array,line_z=0,
-            marker_scale=Vector3(0.1,0.1,0.1),line_scale=Vector3(0.01,0,0),frame_id='map',
-            marker_color=ColorRGBA(0.0,1.0,0.0,0.5),line_color=ColorRGBA(1.0,0.0,0.0,1.0),
-            marker_type=Marker.ARROW,line_type=Marker.LINE_STRIP):
-        marker = Marker(
-                type=marker_type,
-                pose=Pose(Point(marker_x, marker_y, marker_z), Q),
-                scale=marker_scale,
-                header=Header(frame_id=frame_id,stamp=rospy.get_rostime()),
-                action=Marker.ADD,
-                color=marker_color,
-                lifetime=rospy.Duration(secs=1/self.HZ)
-                )
-        line = Marker(
-                type=line_type,
-                pose=Pose(Point(line_x[0], line_y[0], line_z), Quaternion(0, 0, 0, 1)),
-                scale=line_scale,
-                header=Header(frame_id=frame_id,stamp=rospy.get_rostime()),
-                action=Marker.ADD,
-                color=line_color,
-                lifetime=rospy.Duration(secs=1/self.HZ)
-                )
-        for i in range(1, line_x.size):
-            line.points.append(Point(line_x[i],line_y[i],line_z))
-        temp_array = MarkerArray()
-        temp_array.markers.append(marker)
-        temp_array.markers.append(line)
-        self.marker_array = temp_array
-
     def append_text(self,x=0.0,y=0.0,z=0.0,r=0.1,text='text',scale=Vector3(0,0,1),
             frame_id='map',color=ColorRGBA(1.0,1.0,1.0,0.5)):
         marker = Marker(

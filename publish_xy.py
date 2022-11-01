@@ -13,4 +13,4 @@ Hz = 50
 tps_coef = get_tps_mat()
 
 if __name__ == '__main__':
-    publish_xy(tps_coef, Hz, 300, LOG_INFO = True, VERBOSE = True)
+    publish_xy(tps_coef, Hz, 600, LOG_INFO = True, VERBOSE = True)
