@@ -275,7 +275,7 @@ if __name__ == '__main__':
     # Initialize node
     rospy.init_node('visualization_engine', anonymous=True)
     print ("Start visualzation_engine.")
-    tmr_plot = Timer(_name='Plot',_HZ=20,_MAX_SEC=np.inf,_VERBOSE=True)
+    tmr_plot = Timer(_name='Plot',_HZ=50,_MAX_SEC=np.inf,_VERBOSE=True)
     
     # Set terminator
     signal.signal(signal.SIGINT, partial(signal_handler,tmr_plot))
