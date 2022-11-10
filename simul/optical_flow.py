@@ -21,7 +21,7 @@ def Rotate(src, degrees):
 
 def find_snapbotcamidx():
     all_camera_idx_available = []
-    for camera_idx in range(10):
+    for camera_idx in range(20):
         cap = cv2.VideoCapture(camera_idx)
         if cap.isOpened():
             all_camera_idx_available.append(camera_idx)
@@ -147,3 +147,9 @@ def optical_flow(idx):
 
     cap.release()
     cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+
+    idx = find_snapbotcamidx()
+    print(idx)
+    optical_flow(idx[-1])

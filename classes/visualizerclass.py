@@ -77,16 +77,15 @@ class VisualizerClass(object):
              self.text_array.markers.pop(0)
         self.text_array.markers.append(marker) # append
 
-    def append_mesh(self,x=0.0,y=0.0,z=0.0,scale=1.0,dae_path='duck.dae',
-            frame_id='map',color=ColorRGBA(0.0,1.0,1.0,0.5),
-            roll=0.0,pitch=0.0,yaw=0.0):
+    def append_mesh(self,Q=Quaternion(0,0,0,1),scale=Vector3(0.1, 0.1, 0.1),x=0.0,y=0.0,z=0.0,dae_path='duck.dae',
+            frame_id='map',color=ColorRGBA(0.0,1.0,1.0,0.5)):
         marker = Marker(
                 type=Marker.MESH_RESOURCE,
                 mesh_use_embedded_materials=True,
                 mesh_resource=dae_path,
                 # pose=Pose(Point(x, y, z), Quaternion(roll, pitch, yaw, 1)),
-                pose=Pose(Point(x, y, z), Quaternion(*quaternion_from_euler(roll,pitch,yaw))),
-                scale=Vector3(scale, scale, scale),
+                pose=Pose(Point(x, y, z), Q),
+                scale=scale,
                 header=Header(frame_id=frame_id),
                 action=Marker.ADD,
                 color=color,
