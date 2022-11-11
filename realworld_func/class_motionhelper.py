@@ -4,7 +4,7 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import matplotlib
 # matplotlib.use('agg')
-# from pynput import keyboard
+from pynput import keyboard
 write = sys.stdout.write
 
 
