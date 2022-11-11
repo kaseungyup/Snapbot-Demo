@@ -13,7 +13,7 @@ class VisualizerClass(object):
         self.init_pub_markers()
         self.init_pub_texts()
         self.init_pub_meshes()
-        self.init_pub_traj()
+        self.init_pub_lines()
 
     def init_pub_markers(self):
         self.marker_array = MarkerArray()
@@ -36,11 +36,11 @@ class VisualizerClass(object):
         self.pub_meshes = rospy.Publisher("/visualization_engine/meshes",
                         MarkerArray, queue_size=5)
 
-    def init_pub_traj(self):
-        self.traj_array = MarkerArray()
-        self.n_traj = 0
-        self.TRAJ_MAX = 1000
-        self.pub_traj = rospy.Publisher("/visualization_engine/traj",
+    def init_pub_lines(self):
+        self.line_array = MarkerArray()
+        self.n_line = 0
+        self.LINES_MAX = 1000
+        self.pub_lines = rospy.Publisher("/visualization_engine/lines",
                         MarkerArray, queue_size=5)
                     
 
@@ -96,7 +96,7 @@ class VisualizerClass(object):
              self.mesh_array.markers.pop(0)
         self.mesh_array.markers.append(marker) # append
 
-    def append_traj(self,x_array,y_array,z=0.0,scale=Vector3(0.01,0,0),
+    def append_line(self,x_array,y_array,z=0.0,scale=Vector3(0.01,0,0),
             frame_id='map',color=ColorRGBA(1.0,0.0,0.0,1.0),marker_type=Marker.LINE_STRIP):
         marker = Marker(
                 type=marker_type,
@@ -110,9 +110,9 @@ class VisualizerClass(object):
         for i in range(1, x_array.size):
             marker.points.append(Point(x_array[i],y_array[i],z))
         self.n_marker += 1
-        if(self.n_marker > self.TRAJ_MAX):
-             self.traj_array.markers.pop(0)
-        self.traj_array.markers.append(marker) # append
+        if(self.n_marker > self.LINES_MAX):
+             self.line_array.markers.pop(0)
+        self.line_array.markers.append(marker) # append
 
     def reset_markers(self):
         self.marker_array.markers = []
@@ -126,9 +126,9 @@ class VisualizerClass(object):
         self.mesh_array.markers = []
         self.n_mesh = 0
 
-    def reset_traj(self):
-        self.traj_array.markers = []
-        self.n_traj = 0
+    def reset_lines(self):
+        self.line_array.markers = []
+        self.n_line = 0
 
     def delete_markers(self,frame_id='map'):
         self.marker_array.markers = []
@@ -163,16 +163,16 @@ class VisualizerClass(object):
         self.mesh_array.markers.append(marker) # append
         self.pub_meshes.publish(self.mesh_array)
 
-    def delete_traj(self,frame_id='map'):
-        self.traj_array.markers = []
-        self.n_traj = 0
+    def delete_line(self,frame_id='map'):
+        self.line_array.markers = []
+        self.n_line = 0
         marker = Marker(
                 id=0,
                 header=Header(frame_id=frame_id,stamp=rospy.get_rostime()),
                 action=Marker.DELETEALL,
         )
-        self.traj_array.markers.append(marker) # append
-        self.pub_traj.publish(self.traj_array)
+        self.line_array.markers.append(marker) # append
+        self.pub_lines.publish(self.line_array)
 
     def publish_markers(self):
         # update maker index
@@ -195,9 +195,9 @@ class VisualizerClass(object):
         # publish
         self.pub_meshes.publish(self.mesh_array)
 
-    def publish_traj(self):
+    def publish_lines(self):
         # update maker index
-        for m_idx,m in enumerate(self.traj_array.markers):
+        for m_idx,m in enumerate(self.line_array.markers):
             m.id = m_idx
         # publish
-        self.pub_traj.publish(self.traj_array)
+        self.pub_lines.publish(self.line_array)

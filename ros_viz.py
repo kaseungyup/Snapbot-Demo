@@ -112,8 +112,8 @@ if __name__ == '__main__':
     # Visualizer
     V = VisualizerClass(name='simple viz',HZ=Hz)
 
-    V.reset_traj()  
-    V.append_traj(x_array=x_traj,y_array=y_traj,z=0.0,scale=Vector3(0.01,0,0),
+    V.reset_lines()  
+    V.append_line(x_array=x_traj,y_array=y_traj,z=0.0,scale=Vector3(0.01,0,0),
                 frame_id='map',color=ColorRGBA(1.0,1.0,1.0,1.0),marker_type=Marker.LINE_STRIP)
 
     # Start the loop 
@@ -183,14 +183,14 @@ if __name__ == '__main__':
             V.publish_texts()
             tmr_plot.end()
 
-        V.publish_traj()
+        V.publish_lines()
         rospy.sleep(1e-8)
 
     # Exit handler here
     V.delete_markers()
     V.delete_meshes()
     V.delete_texts()
-    V.delete_traj()
+    V.delete_line()
 
 ##rosrun tf static_transform_publisher 0 0 0 0 0 0 1 map my_frame 10
 
