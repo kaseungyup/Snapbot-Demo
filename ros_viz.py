@@ -1,14 +1,10 @@
 #!/usr/bin/env python
 
-import rospy, signal
+import rospy
 import numpy as np
-from functools import partial
-from matplotlib import cm
 
 from visualization_msgs.msg import Marker
 from std_msgs.msg import ColorRGBA, String
-from geometry_msgs.msg import Vector3, Quaternion
-from tf.transformations import quaternion_from_euler
 
 from classes.timer import Timer
 from classes.visualizerclass import VisualizerClass
@@ -81,13 +77,7 @@ class FlagData():
         self.isReady_flag = True
         array = data.data.split()
         self.flag = int(array[0])
-
-def signal_handler(timer, signal, frame):
-    print("Exit the attention engine.\n")
-    timer.finish()
-    # sys.exit(0) # this is not necessary
   
-
 if __name__ == '__main__':
         
     # Initialize node
@@ -112,8 +102,8 @@ if __name__ == '__main__':
     # Visualizer
     V = VisualizerClass(name='simple viz',HZ=Hz)
 
-    V.reset_traj()  
-    V.append_traj(x_array=x_traj,y_array=y_traj,z=0.0,scale=Vector3(0.01,0,0),
+    V.reset_lines()  
+    V.append_line(x_array=x_traj,y_array=y_traj,z=0.0,r=0.01,
                 frame_id='map',color=ColorRGBA(1.0,1.0,1.0,1.0),marker_type=Marker.LINE_STRIP)
 
     # Start the loop 
@@ -160,14 +150,15 @@ if __name__ == '__main__':
 
             # integrated yaw value (Red Arrow)
             mahony_rpy = "Mahony\nRoll: %f° Pitch: %f° Yaw: %f°"%((np.pi-roll)*R2D,-pitch*R2D,yaw_val*2.5/Hz*R2D)
-            V.append_text(x=x[-1],y=y[-1],z=0.3,r=1.0,text=mahony_rpy,scale=Vector3(0,0,0.1),
+            V.append_text(x=x[-1],y=y[-1],z=0.3,r=0.1,text=mahony_rpy,
                 frame_id='map',color=ColorRGBA(1.0,1.0,1.0,0.5))
             # V.append_marker(Quaternion(*quaternion_from_euler(-roll,-pitch,yaw_val*2.5/Hz)),Vector3(0.2,0.06,0.06),x=x[-1],y=y[-1],z=0,frame_id='map',
             #     color=ColorRGBA(1.0,0.0,0.0,0.5),marker_type=Marker.ARROW)
             
             stl_path = 'file:///home/rilab/Project/Snapbot-Demo/ROS_viz_engine/snapbot.stl'
-            V.append_mesh(Quaternion(*quaternion_from_euler(np.pi-roll,-pitch,yaw_val*2.5/Hz)),Vector3(1,1,1),x=x[-1],y=y[-1],z=0,dae_path=stl_path,
-                frame_id='map', color=ColorRGBA(1.0,1.0,1.0,0.5))
+            V.append_mesh(x=x[-1],y=y[-1],z=0,scale=1.0,dae_path=stl_path,
+                frame_id='map', color=ColorRGBA(1.0,1.0,1.0,0.5),
+                roll=np.pi-roll,pitch=-pitch,yaw=yaw_val*2.5/Hz)
 
             # apriltag yaw value (Blue Arrow)
             # V.append_marker(Quaternion(*quaternion_from_euler(-roll,-pitch,apriltag.yaw)),Vector3(0.2,0.06,0.06),x=x[-1],y=y[-1],z=0,frame_id='map',
@@ -175,7 +166,7 @@ if __name__ == '__main__':
 
             # time
             time = "%.2fsec"%(tmr_plot.sec_elps)
-            V.append_text(x=0,y=0,z=0.5,r=1.0,text=time, scale=Vector3(0,0,0.1),
+            V.append_text(x=0,y=0,z=0.5,r=1.0,text=time,
                 frame_id='map',color=ColorRGBA(1.0,1.0,1.0,0.5))
 
             V.publish_markers()
@@ -183,14 +174,14 @@ if __name__ == '__main__':
             V.publish_texts()
             tmr_plot.end()
 
-        V.publish_traj()
+        V.publish_lines()
         rospy.sleep(1e-8)
 
     # Exit handler here
     V.delete_markers()
     V.delete_meshes()
     V.delete_texts()
-    V.delete_traj()
+    V.delete_lines()
 
 ##rosrun tf static_transform_publisher 0 0 0 0 0 0 1 map my_frame 10
 
