@@ -95,7 +95,7 @@ def run_snapbot(qpos, snapbot, Hz, max_sec):
     t.start()
     idx, threshold= 0, 0
     flag = False
-    flag_publisher(1)
+    #flag_publisher(1)
     while t.is_notfinished():
         if t.do_run():
             pos = traj[idx]
@@ -108,7 +108,7 @@ def run_snapbot(qpos, snapbot, Hz, max_sec):
             if idx == traj.shape[0]:
                 t.finish()
     print("FINISHED")
-    flag_publisher(0)
+    #flag_publisher(0)
 
 def run_snapbot_3(traj, snapbot, Hz, max_sec):
     t = timer(_HZ=Hz, _MAX_SEC=max_sec)
