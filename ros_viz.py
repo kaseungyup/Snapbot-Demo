@@ -160,7 +160,7 @@ if __name__ == '__main__':
             # V.append_line(x_array=x_traj,y_array=y_traj,z=0.0,r=0.01,
             #     frame_id='map',color=ColorRGBA(1.0,1.0,1.0,1.0),marker_type=Marker.LINE_STRIP)
             
-            stl_path = 'file://' + CURR_FOLDER + '/ROS_viz_engine/snapbot.stl'
+            stl_path = 'file://' + CURR_FOLDER + '/ROS_viz_engine/snapbot_low_resol.stl'
             V.append_mesh(x=x[-1],y=y[-1],z=0,scale=1.0,dae_path=stl_path,
                 frame_id='map', color=ColorRGBA(1.0,1.0,1.0,0.5),
                 roll=np.pi-roll,pitch=-pitch,yaw=yaw_val*2.5/Hz)
